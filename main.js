@@ -17,10 +17,23 @@ toCsvBtn.addEventListener("click", () => {
 });
 
 // Teste de upload
-fileInput.addEventListener("change", (event) => {
-  const file = event.target.file[0];
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files?.[0];
 
-  if (!file) return;
+  if (!file) {
+    console.log("Nenhum arquivo selecionado!");
+    return;
+  };
 
-  console.log("File selected:", file.name);
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    inputText.value = reader.result;
+  };
+
+  reader.onerror = () => {
+    alert("Erro ao ler o arquivo");
+  };
+
+  reader.readAsText(file);
 });
