@@ -25,6 +25,17 @@ fileInput.addEventListener("change", () => {
     return;
   };
 
+  const fileName = file.name.toLowerCase();
+
+  const isCsv = fileName.endsWith(".csv");
+  const isJson = fileName.endsWith(".json");
+
+  if (!isCsv && !isJson) {
+    alert("Apenas arquivos CSV ou JSON são permitidos.");
+    fileInput.value = "";
+    return;
+  };
+
   const reader = new FileReader();
 
   reader.onload = () => {
