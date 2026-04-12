@@ -1,3 +1,5 @@
+import { csvToJson } from "./utils/csvToJson.js";
+
 // Selecionando elementos
 const fileInput = document.getElementById("fileInput");
 const inputText = document.getElementById("inputText");
@@ -9,7 +11,21 @@ const downloadBtn = document.getElementById("downloadBtn");
 
 // Teste de clique
 toJsonBtn.addEventListener("click", () => {
-  console.log("CSV to JSON button clicked");
+  try {
+    const input = inputText.value;
+
+    if (!input.trim()) {
+      alert("A entrada está vazia");
+      return;
+    }
+
+    const result = csvToJson(input);
+
+    outputText.value = JSON.stringify(result, null, 2);
+  } catch (error) {
+    alert("Erro ao converter CSV para JSON");
+    console.error(error);
+  }
 });
 
 toCsvBtn.addEventListener("click", () => {
