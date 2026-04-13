@@ -21,8 +21,12 @@ toJsonBtn.addEventListener("click", () => {
     }
 
     const result = csvToJson(input);
+    const formatted = JSON.stringify(result, null, 2);
 
-    outputText.value = JSON.stringify(result, null, 2);
+    outputText.value = formatted;
+
+    lastResult = formatted;
+    lastType = "json";
   } catch (error) {
     alert("Erro ao converter CSV para JSON");
     console.error(error);
@@ -41,6 +45,9 @@ toCsvBtn.addEventListener("click", () => {
     const result = jsonToCsv(input);
 
     outputText.value = result;
+
+    lastResult = result;
+    lastType = "csv";
   } catch (error) {
     alert("Erro ao converter JSON para CSV");
     console.error(error);
@@ -78,4 +85,22 @@ fileInput.addEventListener("change", () => {
   };
 
   reader.readAsText(file);
+});
+
+let lastResult = "";
+let lastType = ""; // "json" ou "csv"
+
+downloadBtn.addEventListener("click", () => {
+  if (!lastResult) {
+    alert("Não há nada para baixar.");
+    return;
+  }
+
+  const blob = new Blob([lastResult], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `converted.${lastType}`;
+  a.click();
 });
