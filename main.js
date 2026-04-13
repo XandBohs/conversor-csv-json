@@ -5,6 +5,7 @@ import { jsonToCsv } from "./utils/jsonToCsv.js";
 const fileInput = document.getElementById("fileInput");
 const inputText = document.getElementById("inputText");
 const outputText = document.getElementById("outputText");
+const statusMessage = document.getElementById("statusMessage");
 
 const toJsonBtn = document.getElementById("toJson");
 const toCsvBtn = document.getElementById("toCsv");
@@ -16,7 +17,7 @@ toJsonBtn.addEventListener("click", () => {
     const format = detectFormat(input);
 
     if (format !== "csv") {
-      alert("A entrada não é um arquivo CSV válido.");
+      alert("A entrada não é um arquivo CSV válido.", "error");
       return;
     }
 
@@ -32,9 +33,11 @@ toJsonBtn.addEventListener("click", () => {
 
     lastResult = formatted;
     lastType = "json";
+
+    setStatus("Convertido para JSON com sucesso.")
   } catch (error) {
     alert("Erro ao converter CSV para JSON");
-    console.error(error);
+    setStatus(error.message, "error");
   }
 });
 
@@ -59,13 +62,14 @@ toCsvBtn.addEventListener("click", () => {
 
     lastResult = result;
     lastType = "csv";
+
+    setStatus("Convertido para CSV com sucesso.")
   } catch (error) {
     alert("Erro ao converter JSON para CSV");
-    console.error(error);
+    setStatus(error.message, "error");
   }
 });
 
-// Teste de upload
 fileInput.addEventListener("change", () => {
   const file = fileInput.files?.[0];
 
@@ -105,7 +109,7 @@ let lastType = ""; // "json" ou "csv"
 
 downloadBtn.addEventListener("click", () => {
   if (!lastResult) {
-    alert("Não há nada para baixar.");
+    alert("Não há nada para baixar.", "error");
     return;
   }
 
@@ -116,6 +120,8 @@ downloadBtn.addEventListener("click", () => {
   a.href = url;
   a.download = `converted.${lastType}`;
   a.click();
+
+  setStatus("Download iniciado")
 });
 
 function detectFormat(text) {
@@ -168,3 +174,8 @@ document.getElementById("autoConvert").addEventListener("click", () => {
     alert("Entrada inválida");
   }
 });
+
+function setStatus(message, type = "success") {
+  statusMessage.textContent = message;
+  statusMessage.className = type;
+}
