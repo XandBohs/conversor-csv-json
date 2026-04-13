@@ -10,10 +10,15 @@ const toJsonBtn = document.getElementById("toJson");
 const toCsvBtn = document.getElementById("toCsv");
 const downloadBtn = document.getElementById("downloadBtn");
 
-// Teste de clique
 toJsonBtn.addEventListener("click", () => {
   try {
     const input = inputText.value;
+    const format = detectFormat(input);
+
+    if (format !== "csv") {
+      alert("A entrada não é um arquivo CSV válido.");
+      return;
+    }
 
     if (!input.trim()) {
       alert("A entrada está vazia");
@@ -36,6 +41,12 @@ toJsonBtn.addEventListener("click", () => {
 toCsvBtn.addEventListener("click", () => {
   try {
     const input = inputText.value;
+    const format = detectFormat(input);
+
+    if (format !== "json") {
+      alert("A entrada não é um arquivo JSON válido.")
+      return;
+    }
 
     if (!input.trim()) {
       alert("A entrada está vazia");
@@ -78,6 +89,8 @@ fileInput.addEventListener("change", () => {
 
   reader.onload = () => {
     inputText.value = reader.result;
+
+    inputText.dispatchEvent(new Event("input"));
   };
 
   reader.onerror = () => {
@@ -103,4 +116,55 @@ downloadBtn.addEventListener("click", () => {
   a.href = url;
   a.download = `converted.${lastType}`;
   a.click();
+});
+
+function detectFormat(text) {
+  const trimmed = text.trim();
+
+  if (!trimmed) return null;
+
+  // tenta json
+  try {
+    const parsed = JSON.parse(trimmed);
+
+    if (Array.isArray(parsed)) {
+      return "json";
+    }
+
+    return "invalid-json";
+  } catch {
+    // valida se parece CSV de verdade
+    if (trimmed.includes(",") && trimmed.includes("\n")) {
+      return "csv";
+    }
+
+    return "unknown";
+  }
+}
+
+inputText.addEventListener("input", () => {
+  const format = detectFormat(inputText.value);
+
+  if (format === "json") {
+    formatInfo.textContent = "Detected: JSON";
+  } else if (format === "csv") {
+    formatInfo.textContent = "Detected: CSV";
+  } else if (format === "invalid-json") {
+    formatInfo.textContent = "Invalid JSON format";
+  } else {
+    formatInfo.textContent = "";
+  }
+});
+
+document.getElementById("autoConvert").addEventListener("click", () => {
+  const input = inputText.value;
+  const format = detectFormat(input);
+
+  if (format === "csv") {
+    toJsonBtn.click();
+  } else if (format === "json") {
+    toCsvBtn.click();
+  } else {
+    alert("Entrada inválida");
+  }
 });
