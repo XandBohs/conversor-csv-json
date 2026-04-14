@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/assets/csv-json_icon.png">
   <title>Conversor CSV-JSON</title>
 
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
-    <h1>Conversor CSV-JSON</h1>
+    <h1>Conversor CSV ⇄ JSON</h1>
 
     <input type="file" id="fileInput"/>
 
     <p>Ou cole seu conteúdo:</p>
 
-    <textarea id="inputText"></textarea>
+    <textarea id="inputText" placeholder="Insira seu CSV ou JSON"></textarea>
     <p id="formatInfo"></p>
     <p id="statusMessage"></p>
 
@@ -25,7 +26,7 @@
       <button id="autoConvert">Conversão automática</button>
     </div>
 
-    <textarea id="outputText" readonly></textarea>
+    <textarea id="outputText" placeholder="Resultado..." readonly></textarea>
 
     <button id="downloadBtn">Baixar resultado</button>
   </div>
